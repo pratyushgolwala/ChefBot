@@ -3,10 +3,6 @@
 .env.local
 .env.*.local
 
-# Markdown Files (Documentation)
-*.md
-!.gitkeep
-
 # Python
 __pycache__/
 *.py[cod]
