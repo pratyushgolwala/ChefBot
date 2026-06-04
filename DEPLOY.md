@@ -40,7 +40,7 @@ Frontend will run at: `http://localhost:5174`
 
 **Settings → Build**
 - **Builder**: `Python`
-- **Build Command**: `pip install -r ../requirements.txt`
+- **Build Command**: `pip install -r requirements.txt`
 - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
 
 ### Step 3: Add Environment Variables
