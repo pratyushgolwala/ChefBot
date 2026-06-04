@@ -19,8 +19,8 @@ const LANGUAGES = {
   de: 'German',
 }
 
-// Backend API URL - use environment variable or default
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://chefbot-production-8ebc.up.railway.app'
+// Backend API URL - use environment variable or default, remove trailing slash
+const API_BASE_URL = (import.meta.env.VITE_BACKEND_URL || 'https://chefbot-production-8ebc.up.railway.app').replace(/\/$/, '')
 
 const SUGGESTIONS = [
   "How do I make butter chicken?",
