@@ -19,6 +19,9 @@ const LANGUAGES = {
   de: 'German',
 }
 
+// Backend API URL - use environment variable or default
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'https://chefbot-production-8ebc.up.railway.app'
+
 const SUGGESTIONS = [
   "How do I make butter chicken?",
   "Quick 15-minute recipes",
@@ -61,7 +64,7 @@ function App() {
     setIsLoading(true)
 
     try {
-      const res = await fetch('http://localhost:8000/chat', {
+      const res = await fetch(`${API_BASE_URL}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -87,7 +90,7 @@ function App() {
     } catch (err) {
       console.error(err)
       setMessages(prev => [...prev, {
-        text: '⚠️ Unable to connect. Please ensure the backend is running on port 8000.',
+        text: `⚠️ Unable to connect to backend. Make sure ${API_BASE_URL} is running.`,
         sender: 'bot',
         timestamp: new Date(),
         isError: true,
@@ -99,7 +102,7 @@ function App() {
 
   const handleReset = async () => {
     try {
-      await fetch('http://localhost:8000/reset', {
+      await fetch(`${API_BASE_URL}/reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: sessionId }),
