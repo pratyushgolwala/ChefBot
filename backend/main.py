@@ -2,8 +2,8 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
-from sentence_transformers import SentenceTransformer
 import numpy as np
+
 import requests
 import uuid
 import os
@@ -84,18 +84,17 @@ def translate_text(text: str, source_lang: str, target_lang: str) -> str:
         logger.error(f"Translation error: {e}")
         return text
 
-# ── RAG Setup ─────────────────────────────────────────────────────────────────
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
-print("🔧 Loading sentence transformer model...")
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
-print("✓ Embedder loaded")
+# ── RAG Setup (Lightweight, low-memory vector retrieval for Render Free Tier) ─
 
 print("📚 Loading recipe database...")
 with open(os.path.join(os.path.dirname(__file__), "recipes.json"), "r") as f:
     recipes = json.load(f)
 print(f"✓ Loaded {len(recipes)} recipes")
 
-print("🧮 Computing recipe embeddings...")
+print("🧮 Computing lightweight TF-IDF recipe vectors...")
 recipe_texts = []
 for r in recipes:
     text = f"{r['name']} {r['cuisine']} {r['difficulty']} "
@@ -103,8 +102,10 @@ for r in recipes:
     text += f"{' '.join(r.get('tags', []))}"
     recipe_texts.append(text)
 
-recipe_embeddings = embedder.encode(recipe_texts, convert_to_numpy=True)
-print(f"✓ Embeddings ready: {recipe_embeddings.shape}")
+vectorizer = TfidfVectorizer(ngram_range=(1, 2), stop_words='english')
+recipe_vectors = vectorizer.fit_transform(recipe_texts)
+print(f"✓ Vectors ready: shape {recipe_vectors.shape}")
+
 
 # ── ChefBot System Prompt ─────────────────────────────────────────────────────
 
@@ -165,20 +166,22 @@ class ResetRequest(BaseModel):
 # ── RAG Functions ─────────────────────────────────────────────────────────────
 
 def retrieve_recipes(query: str, top_k: int = 3) -> list:
-    """Retrieve top-k most relevant recipes using semantic similarity."""
-    query_embedding = embedder.encode([query], convert_to_numpy=True)[0]
-    similarities = np.dot(recipe_embeddings, query_embedding) / (
-        np.linalg.norm(recipe_embeddings, axis=1) * np.linalg.norm(query_embedding)
-    )
+    """Retrieve top-k most relevant recipes using TF-IDF cosine similarity."""
+    query_vector = vectorizer.transform([query])
+    similarities = cosine_similarity(query_vector, recipe_vectors).flatten()
     top_indices = np.argsort(similarities)[-top_k:][::-1]
     
     results = []
     for idx in top_indices:
-        recipe = recipes[idx].copy()
-        recipe['similarity_score'] = float(similarities[idx])
-        results.append(recipe)
+        # Include recipes if there is any lexical/semantic overlap or top ranking
+        score = float(similarities[idx])
+        if score > 0 or len(results) == 0:
+            recipe = recipes[idx].copy()
+            recipe['similarity_score'] = score
+            results.append(recipe)
     
     return results
+
 
 def format_recipes_for_context(retrieved: list) -> str:
     """Format retrieved recipes into a readable context block for GPT."""
@@ -310,11 +313,12 @@ async def health_check():
         "status": "healthy",
         "bot": "ChefBot with RAG + Multi-language",
         "model": MODEL,
-        "embedder": "all-MiniLM-L6-v2",
+        "vectorizer": "TF-IDF + Cosine Similarity",
         "recipes_loaded": len(recipes),
         "active_sessions": len(session_histories),
         "languages_supported": list(LANGUAGE_CODES.values()),
     }
+
 
 
 @app.get("/recipes")
