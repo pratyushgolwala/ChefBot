@@ -24,7 +24,7 @@ Render provides free hosting for web services with automatic HTTPS and Git-based
    - **Name**: `chefbot-backend` (or your preferred name)
    - **Region**: Choose the closest region (e.g., *Oregon (US West)* or *Singapore*)
    - **Language / Runtime**: `Python 3`
-   - **Root Directory**: `chefbot/backend`
+   - **Root Directory**: `backend`
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
    - **Instance Type**: `Free`
@@ -77,7 +77,8 @@ Vercel provides blazing-fast static edge hosting with automatic global CDN for V
 3. Import your `ChefBot` GitHub repository.
 4. In the **Configure Project** window:
    - **Framework Preset**: `Vite`
-   - **Root Directory**: Click *Edit* and select `chefbot/frontend`
+   - **Root Directory**: Click *Edit* and select `frontend`
+
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
    - **Install Command**: `npm install`

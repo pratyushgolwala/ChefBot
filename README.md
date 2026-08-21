@@ -8,24 +8,24 @@ ChefBot is an intelligent, multi-language conversational culinary assistant powe
 
 ```
 ChefBot/
-├── chefbot/
-│   ├── backend/               # FastAPI Python Backend
-│   │   ├── main.py            # API routes, RAG engine, CORS & health checks
-│   │   ├── recipes.json       # Structured recipe database with tags & instructions
-│   │   └── requirements.txt   # Python backend dependencies
-│   └── frontend/              # React (Vite) Web Application
-│       ├── public/            # Static assets
-│       ├── src/               # React components & styles
-│       ├── .env.development   # Local dev environment config
-│       ├── .env.production    # Production build config
-│       └── package.json       # Frontend dependencies & scripts
+├── backend/               # FastAPI Python Backend
+│   ├── main.py            # API routes, RAG engine, CORS & health checks
+│   ├── recipes.json       # Structured recipe database with tags & instructions
+│   └── requirements.txt   # Python backend dependencies
+├── frontend/              # React (Vite) Web Application
+│   ├── public/            # Static assets
+│   ├── src/               # React components & styles
+│   ├── .env.development   # Local dev environment config
+│   ├── .env.production    # Production build config
+│   └── package.json       # Frontend dependencies & scripts
 ├── .github/
 │   └── workflows/
-│       └── keepalive.yml      # GitHub Actions Cron to prevent Render backend from sleeping
-├── start.sh                   # Unified startup script for backend & frontend
-├── DEPLOY.md                  # Complete Render + Vercel Deployment & Keep-Alive Guide
-└── CHEFBOT_DESCRIPTION.md     # Detailed architecture & feature documentation
+│       └── keepalive.yml  # GitHub Actions Cron to prevent Render backend from sleeping
+├── start.sh               # Unified startup script for backend & frontend
+├── DEPLOY.md              # Complete Render + Vercel Deployment & Keep-Alive Guide
+└── CHEFBOT_DESCRIPTION.md # Detailed architecture & feature documentation
 ```
+
 
 ---
 

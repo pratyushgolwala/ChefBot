@@ -15,7 +15,7 @@ import logging
 
 # Load .env from backend directory or project root
 load_dotenv()
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../../.env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../.env"))
 
 API_KEY = os.getenv("OPENROUTER_API_KEY") or os.getenv("openrouter_api_key")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"

@@ -11,8 +11,8 @@
 set -e
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKEND_DIR="$PROJECT_ROOT/chefbot/backend"
-FRONTEND_DIR="$PROJECT_ROOT/chefbot/frontend"
+BACKEND_DIR="$PROJECT_ROOT/backend"
+FRONTEND_DIR="$PROJECT_ROOT/frontend"
 
 start_backend() {
     echo "================================"
